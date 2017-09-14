@@ -1,10 +1,55 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, \
+    url_for, make_response
+from articles import save_article, get_filename, load_article
+import random
+import string
+
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
-@app.route('/')
+
+@app.route('/', methods=['POST', 'GET'])
 def form():
-    return render_template('form.html')
+    if request.method == 'POST':
+        header = request.form.get('header')
+        signature = request.form.get('signature')
+        body = request.form.get('body')
+        url = get_filename(header)
+        token = ''.join(random.choice(
+            string.ascii_uppercase + string.ascii_lowercase + string.digits
+        ) for x in range(16))
+        save_article(header, signature, body, url, token)
+        response = make_response(redirect(
+            url_for('show_article', article=url)))
+        response.set_cookie(token, value='author')
+        return response
+    else:
+        return render_template('form.html')
+
+
+@app.route('/<article>/', methods=['POST', 'GET'])
+def show_article(article):
+    article_data = load_article(article)
+    if article_data[3] in request.cookies:
+        status = ""
+    else:
+        status = "disabled"
+    if request.method == 'POST':
+        header = request.form.get('header')
+        signature = request.form.get('signature')
+        body = request.form.get('body')
+        save_article(header, signature, body, article, article_data[3])
+        return redirect(url_for('show_article', article=article))
+    else:
+        header = article_data[0]
+        signature = article_data[1]
+        body = article_data[2]
+        return render_template(
+            'article.html', status=status, header=header,
+            signature=signature, body=body)
+
 
 if __name__ == "__main__":
+    app.debug = False
     app.run()
