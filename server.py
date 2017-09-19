@@ -31,7 +31,7 @@ def form():
 @app.route('/<article>/', methods=['POST', 'GET'])
 def show_article(article):
     article_data = load_article(article)
-    if article_data[3] in request.cookies:
+    if article_data['token'] in request.cookies:
         status = ""
     else:
         status = "disabled"
@@ -39,17 +39,17 @@ def show_article(article):
         header = request.form.get('header')
         signature = request.form.get('signature')
         body = request.form.get('body')
-        save_article(header, signature, body, article, article_data[3])
+        save_article(header, signature, body, article, article_data['token'])
         return redirect(url_for('show_article', article=article))
     else:
-        header = article_data[0]
-        signature = article_data[1]
-        body = article_data[2]
+        header = article_data['header']
+        signature = article_data['signature']
+        body = article_data['body']
         return render_template(
             'article.html', status=status, header=header,
             signature=signature, body=body)
 
 
 if __name__ == "__main__":
-    app.debug = False
+    app.debug = True
     app.run()
