@@ -32,9 +32,9 @@ def form():
 def show_article(article):
     article_data = load_article(article)
     if article_data['token'] in request.cookies:
-        status = ""
+        attribute = ""
     else:
-        status = "disabled"
+        attribute = "disabled"
     if request.method == 'POST':
         header = request.form.get('header')
         signature = request.form.get('signature')
@@ -46,7 +46,7 @@ def show_article(article):
         signature = article_data['signature']
         body = article_data['body']
         return render_template(
-            'article.html', status=status, header=header,
+            'article.html', attribute=attribute, header=header,
             signature=signature, body=body)
 
 
