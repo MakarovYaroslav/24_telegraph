@@ -29,11 +29,14 @@ def get_filename(text):
 
 
 def load_article(filename):
-    with open('articles/%s.json' % filename) as article_file:
-        article_data = json.load(article_file)
-    article = dict()
-    article['header'] = article_data['header']
-    article['signature'] = article_data['signature']
-    article['body'] = article_data['body']
-    article['token'] = article_data['token']
-    return article
+    try:
+        with open('articles/%s.json' % filename) as article_file:
+            article_data = json.load(article_file)
+        article = dict()
+        article['header'] = article_data['header']
+        article['signature'] = article_data['signature']
+        article['body'] = article_data['body']
+        article['token'] = article_data['token']
+        return article
+    except FileNotFoundError:
+        return None

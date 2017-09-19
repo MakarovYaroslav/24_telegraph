@@ -31,6 +31,8 @@ def form():
 @app.route('/<article>/', methods=['POST', 'GET'])
 def show_article(article):
     article_data = load_article(article)
+    if article_data is None:
+        return render_template('404.html')
     if article_data['token'] in request.cookies:
         attribute = ""
     else:
@@ -51,5 +53,5 @@ def show_article(article):
 
 
 if __name__ == "__main__":
-    app.debug = False
+    app.debug = True
     app.run()
