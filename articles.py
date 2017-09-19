@@ -2,7 +2,7 @@ import json
 from transliterate import translit
 from datetime import date
 import os.path
-
+import re
 
 def save_article(header, signature, body, filename, token):
     article = {'header': header, 'signature': signature,
@@ -14,6 +14,7 @@ def save_article(header, signature, body, filename, token):
 
 
 def get_filename(text):
+    text = re.sub('[./*!@#$?`]', '', text)
     text = text.strip()
     text = text.replace(" ", "-")
     now_date = date.today()
