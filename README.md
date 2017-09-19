@@ -1,20 +1,22 @@
 # Telegraph Clone
 
-This site is developed for publication of anonymous articles
+[This site](https://telegraph-analog.herokuapp.com/) is developed for publication of anonymous articles
 
 Any user can post an article and get a unique url.
 
 Only the author can edit article.
+
+[Example of published article.](https://telegraph-analog.herokuapp.com/Testovyj-zagolo-13-9/)
 
 # Deploy on localhost
 
 Example of launch on Linux, Python 3.5:
 
 ```bash
-python3 server.py
+gunicorn server:app
 ```
 
-Open page [localhost:5000](http://localhost:5000) in browser.
+Open page [localhost:8000](http://localhost:8000) in browser.
 
 # Project Goals
 
