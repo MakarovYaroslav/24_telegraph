@@ -4,6 +4,7 @@ from datetime import date
 import os.path
 import re
 
+
 def save_article(header, signature, body, filename, token):
     article = {'header': header, 'signature': signature,
                'body': body, 'token': token}
