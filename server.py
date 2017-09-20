@@ -35,23 +35,21 @@ def show_article(article):
         return render_template('404.html')
     if article_data['token'] in request.cookies:
         attribute = ""
+        if request.method == 'POST':
+            header = request.form.get('header')
+            signature = request.form.get('signature')
+            body = request.form.get('body')
+            save_article(header, signature, body, article, article_data['token'])
+            return redirect(url_for('show_article', article=article))
     else:
         attribute = "disabled"
-    if request.method == 'POST':
-        header = request.form.get('header')
-        signature = request.form.get('signature')
-        body = request.form.get('body')
-        save_article(header, signature, body, article, article_data['token'])
-        return redirect(url_for('show_article', article=article))
-    else:
-        header = article_data['header']
-        signature = article_data['signature']
-        body = article_data['body']
-        return render_template(
-            'article.html', attribute=attribute, header=header,
-            signature=signature, body=body)
+    header = article_data['header']
+    signature = article_data['signature']
+    body = article_data['body']
+    return render_template(
+        'article.html', attribute=attribute, header=header,
+        signature=signature, body=body)
 
 
 if __name__ == "__main__":
-    app.debug = False
     app.run()
