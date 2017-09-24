@@ -32,14 +32,15 @@ def form():
 def show_article(article):
     article_data = load_article(article)
     if article_data is None:
-        return render_template('404.html')
+        return render_template('404.html'), 404
     if article_data['token'] in request.cookies:
         attribute = ""
         if request.method == 'POST':
             header = request.form.get('header')
             signature = request.form.get('signature')
             body = request.form.get('body')
-            save_article(header, signature, body, article, article_data['token'])
+            save_article(header, signature, body, article,
+                         article_data['token'])
             return redirect(url_for('show_article', article=article))
     else:
         attribute = "disabled"
